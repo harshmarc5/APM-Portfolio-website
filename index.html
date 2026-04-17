@@ -359,7 +359,8 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
   position:fixed;inset:0;z-index:600;
   background:rgba(5,5,7,.97);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;opacity:0;pointer-events:none;transition:opacity .4s;
+  gap:12px;opacity:0;pointer-events:none;transition:opacity .4s;
+  overflow-y:auto;padding:20px 0;
 }
 #cube-challenge.show{opacity:1;pointer-events:all}
 
@@ -369,23 +370,51 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
 /* countdown ring */
 #cc-countdown-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
 #cc-ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:4}
-#cc-ring-fg{fill:none;stroke:#ff2d78;stroke-width:4;stroke-linecap:round;stroke-dasharray:201;stroke-dashoffset:0;transition:stroke-dashoffset .9s linear,stroke .4s}
+#cc-ring-fg{fill:none;stroke:#00f5d4;stroke-width:4;stroke-linecap:round;stroke-dasharray:201;stroke-dashoffset:0;transition:stroke-dashoffset .9s linear,stroke .4s}
 #cc-ring-text{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}
 
-/* challenge hint box (every 5s) */
+/* ── UPGRADED HINT CARD ── */
 #cc-hint-box{
-  background:rgba(0,245,212,.06);border:1px solid rgba(0,245,212,.2);
-  border-radius:3px;padding:12px 18px;max-width:340px;text-align:center;
-  opacity:0;transition:opacity .4s;
+  background:rgba(10,10,18,.85);
+  border:1px solid rgba(0,245,212,.25);
+  box-shadow:0 0 20px rgba(0,245,212,.06),inset 0 1px 0 rgba(255,255,255,.05);
+  border-radius:6px;
+  padding:0;
+  max-width:380px;width:90vw;
+  opacity:0;transition:opacity .5s;
+  overflow:hidden;
 }
 #cc-hint-box.show{opacity:1}
-#cc-hint-label{font-size:9px;letter-spacing:.25em;color:var(--cyan);text-transform:uppercase;margin-bottom:5px}
-#cc-hint-text{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;font-family:'Share Tech Mono',monospace}
+.hint-top-bar{height:2px;background:linear-gradient(90deg,#00f5d4,#a855f7,#ff2d78);width:100%}
+.hint-inner{padding:14px 16px 16px}
+.hint-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.hint-icon{width:22px;height:22px;border-radius:50%;background:rgba(0,245,212,.12);border:1px solid rgba(0,245,212,.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--cyan);flex-shrink:0}
+.hint-tag{font-size:9px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase}
+.hint-step-badge{margin-left:auto;font-size:8px;letter-spacing:.15em;color:rgba(255,255,255,.25);text-transform:uppercase;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:2px 8px;border-radius:10px}
+#cc-hint-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:5px}
+#cc-hint-text{font-size:11px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:10px}
+.hint-readable{font-size:11px;color:rgba(0,245,212,.8);line-height:1.7;font-family:'Share Tech Mono',monospace;background:rgba(0,245,212,.05);border-left:2px solid rgba(0,245,212,.3);padding:6px 10px;border-radius:0 3px 3px 0;margin-bottom:10px}
+
+/* beginner toggle */
+.hint-toggle-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.hint-toggle-label{font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase}
+.toggle-switch{position:relative;width:28px;height:16px;cursor:pointer}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:8px;border:1px solid rgba(255,255,255,.12);transition:background .2s}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:10px;height:10px;background:rgba(255,255,255,.4);border-radius:50%;transition:all .2s}
+.toggle-switch input:checked+.toggle-track{background:rgba(0,245,212,.2);border-color:rgba(0,245,212,.4)}
+.toggle-switch input:checked~.toggle-thumb{left:14px;background:var(--cyan)}
+/* legend panel */
+.hint-legend{display:none;grid-template-columns:1fr 1fr;gap:4px 12px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+.hint-legend.show{display:grid}
+.legend-row{display:flex;align-items:center;gap:6px}
+.legend-key{font-size:10px;color:#fff;font-family:'Share Tech Mono',monospace;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:2px;padding:1px 5px;min-width:22px;text-align:center}
+.legend-desc{font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.05em}
 
 /* mini cube for challenge */
 #cc-cube-scene{
-  position:relative;width:220px;height:220px;
-  perspective:600px;cursor:grab;user-select:none;
+  position:relative;width:200px;height:200px;
+  perspective:560px;cursor:grab;user-select:none;
 }
 #cc-cube-scene:active{cursor:grabbing}
 #cc-cube-wrap{
@@ -395,33 +424,57 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
   transition:transform .15s ease;
 }
 .ccface{
-  position:absolute;width:160px;height:160px;
-  left:30px;top:30px;
+  position:absolute;width:144px;height:144px;
+  left:28px;top:28px;
   display:grid;grid-template-columns:1fr 1fr;
-  gap:4px;padding:6px;border-radius:4px;
+  gap:4px;padding:5px;border-radius:4px;
 }
-.ccface.ccfront {transform:rotateY(0deg)   translateZ(80px)}
-.ccface.ccback  {transform:rotateY(180deg) translateZ(80px)}
-.ccface.ccright {transform:rotateY(90deg)  translateZ(80px)}
-.ccface.ccleft  {transform:rotateY(-90deg) translateZ(80px)}
-.ccface.cctop   {transform:rotateX(90deg)  translateZ(80px)}
-.ccface.ccbottom{transform:rotateX(-90deg) translateZ(80px)}
+.ccface.ccfront {transform:rotateY(0deg)   translateZ(72px)}
+.ccface.ccback  {transform:rotateY(180deg) translateZ(72px)}
+.ccface.ccright {transform:rotateY(90deg)  translateZ(72px)}
+.ccface.ccleft  {transform:rotateY(-90deg) translateZ(72px)}
+.ccface.cctop   {transform:rotateX(90deg)  translateZ(72px)}
+.ccface.ccbottom{transform:rotateX(-90deg) translateZ(72px)}
 .cccubie{
   border-radius:3px;border:2px solid rgba(0,0,0,.5);
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;transition:background .12s;
 }
 .cccubie::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 50%);pointer-events:none}
 
-/* challenge move buttons */
-#cc-moves{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:320px}
+/* challenge move buttons — with tooltip */
+#cc-moves{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:310px}
 .cc-mv{
-  width:40px;height:40px;
+  position:relative;
+  width:44px;height:44px;
   background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:3px;
   color:rgba(255,255,255,.7);font-family:'Share Tech Mono',monospace;font-size:11px;
   cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:2px;
 }
 .cc-mv:hover{background:rgba(255,45,120,.15);border-color:#ff2d78;color:#fff}
 .cc-mv:active{transform:scale(.92)}
+.cc-mv .mv-face{font-size:8px;color:rgba(255,255,255,.3);letter-spacing:.05em}
+/* tooltip */
+.cc-mv .mv-tip{
+  position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  background:rgba(10,10,18,.98);border:1px solid rgba(255,255,255,.1);
+  border-radius:3px;padding:4px 8px;
+  font-size:9px;letter-spacing:.05em;color:rgba(255,255,255,.7);
+  white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity .15s;z-index:10;
+}
+.cc-mv .mv-tip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:4px solid transparent;border-top-color:rgba(255,255,255,.1);
+}
+.cc-mv:hover .mv-tip{opacity:1}
+
+/* progress bar — moves completion % */
+#cc-progress-row{display:flex;align-items:center;gap:10px;width:100%;max-width:380px}
+#cc-prog-label{font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase;white-space:nowrap}
+#cc-prog-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+#cc-prog-bar{height:100%;background:linear-gradient(90deg,#00f5d4,#a855f7);width:0%;transition:width .3s}
+#cc-prog-pct{font-size:9px;color:var(--cyan);min-width:28px;text-align:right;font-family:'Syne',sans-serif;font-weight:700}
 
 #cc-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .cc-act{
@@ -434,7 +487,37 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
 .cc-act.cc-giveup{border-color:rgba(255,45,120,.4);color:rgba(255,45,120,.7)}
 .cc-act.cc-giveup:hover{background:rgba(255,45,120,.1);color:#ff2d78}
 
-/* ── UNLOCK MESSAGE POPUP ── */
+/* ── TIME'S UP MODAL ── */
+#cc-timeout-modal{
+  position:fixed;inset:0;z-index:650;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,5,7,.95);
+  opacity:0;pointer-events:none;transition:opacity .4s;
+}
+#cc-timeout-modal.show{opacity:1;pointer-events:all}
+#cc-timeout-card{
+  background:rgba(15,15,20,.98);
+  border:1px solid rgba(251,191,36,.3);
+  border-radius:4px;
+  padding:36px 32px;
+  max-width:420px;width:90vw;
+  text-align:center;
+  position:relative;overflow:hidden;
+  animation:scaleIn .4s cubic-bezier(.34,1.4,.64,1) both;
+}
+.to-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#fbbf24,#ff2d78)}
+.to-icon{font-size:32px;margin-bottom:12px}
+.to-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.2}
+.to-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:24px}
+.to-quote{font-size:12px;color:var(--amber);font-style:italic;border-left:2px solid var(--amber);padding:6px 12px;text-align:left;margin-bottom:20px;line-height:1.6}
+.to-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.to-btn{font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:10px 20px;border-radius:1px;cursor:pointer;font-family:'Share Tech Mono',monospace;transition:all .2s}
+.to-btn.retry{background:#ff2d78;border:1px solid #ff2d78;color:#fff}
+.to-btn.retry:hover{background:#e0195f}
+.to-btn.auto{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6)}
+.to-btn.auto:hover{background:rgba(255,255,255,.06);color:#fff}
+
+/* ── UPGRADED UNLOCK POPUP ── */
 #unlock-popup{
   position:fixed;inset:0;z-index:700;
   display:flex;align-items:center;justify-content:center;
@@ -443,27 +526,107 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
 }
 #unlock-popup.show{opacity:1;pointer-events:all}
 #unlock-card{
-  background:rgba(15,15,20,.98);
-  border:1px solid rgba(255,45,120,.4);
-  border-radius:4px;
-  padding:40px 36px;
-  max-width:480px;width:90vw;
+  background:rgba(12,12,18,.98);
+  border:1px solid transparent;
+  border-radius:6px;
+  padding:44px 40px 36px;
+  max-width:500px;width:90vw;
   text-align:center;
   position:relative;
   overflow:hidden;
+  animation:unlockIn .6s cubic-bezier(.34,1.3,.64,1) both;
+  /* glow border via box-shadow */
+  box-shadow:0 0 0 1px rgba(255,45,120,.35),0 0 40px rgba(255,45,120,.12),0 0 80px rgba(168,85,247,.06);
+}
+@keyframes unlockIn{
+  0%{transform:scale(.85);opacity:0}
+  100%{transform:scale(1);opacity:1}
 }
 .uc-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ff2d78,#a855f7,#00f5d4)}
-.uc-icon{font-size:28px;margin-bottom:16px}
-.uc-title{font-family:'Syne',sans-serif;font-size:clamp(18px,3vw,26px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px}
-.uc-msg{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:24px;letter-spacing:.03em}
-.uc-highlight{color:#ff2d78;font-style:italic}
-.uc-btn{
-  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-  padding:12px 28px;border:1px solid #ff2d78;border-radius:1px;
+/* animated checkmark */
+.uc-check{width:52px;height:52px;border-radius:50%;background:rgba(0,245,212,.08);border:1.5px solid rgba(0,245,212,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:checkPop .5s cubic-bezier(.34,1.6,.64,1) .2s both}
+@keyframes checkPop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.uc-check svg{width:22px;height:22px;stroke:var(--cyan);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.uc-access-tag{font-size:9px;letter-spacing:.35em;color:var(--cyan);text-transform:uppercase;margin-bottom:10px}
+.uc-title{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,32px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:10px}
+.uc-seen{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:6px}
+.uc-highlight{font-size:15px;color:#ff2d78;font-style:italic;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:8px}
+.uc-cta-line{font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.1em;margin-bottom:28px}
+.uc-divider{height:1px;background:rgba(255,255,255,.06);margin-bottom:24px}
+.uc-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.uc-btn-primary{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  padding:13px 28px;border:1px solid #ff2d78;border-radius:1px;
   background:#ff2d78;color:#fff;cursor:pointer;
   font-family:'Share Tech Mono',monospace;transition:all .2s;
 }
-.uc-btn:hover{background:#e0195f}
+.uc-btn-primary:hover{background:#e0195f;border-color:#e0195f}
+.uc-btn-secondary{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  padding:13px 24px;border:1px solid rgba(255,255,255,.2);border-radius:1px;
+  background:transparent;color:rgba(255,255,255,.6);cursor:pointer;
+  font-family:'Share Tech Mono',monospace;transition:all .2s;
+}
+.uc-btn-secondary:hover{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.4)}
+
+/* ── SCHEDULE 1:1 MODAL ── */
+#schedule-modal{
+  position:fixed;inset:0;z-index:800;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,5,7,.94);backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#schedule-modal.show{opacity:1;pointer-events:all}
+#schedule-card{
+  background:rgba(12,12,18,.98);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:4px;
+  width:min(540px,94vw);
+  max-height:92vh;overflow-y:auto;
+  position:relative;padding:36px 32px;
+  box-shadow:0 20px 80px rgba(0,0,0,.7);
+}
+#schedule-card::-webkit-scrollbar{width:3px}
+#schedule-card::-webkit-scrollbar-thumb{background:var(--pink)}
+.sc-card-close{position:absolute;top:14px;right:18px;font-size:16px;cursor:pointer;color:rgba(255,255,255,.3);transition:color .2s;font-family:'Syne',sans-serif;font-weight:800}
+.sc-card-close:hover{color:#fff}
+.sc-tag{font-size:9px;letter-spacing:.3em;color:var(--pink);text-transform:uppercase;margin-bottom:8px}
+.sc-heading{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}
+.sc-sub2{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:24px;letter-spacing:.05em}
+.sc-divider2{height:1px;background:rgba(255,255,255,.07);margin:20px 0}
+.sc-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.sc-label{font-size:9px;letter-spacing:.25em;color:rgba(255,255,255,.4);text-transform:uppercase}
+.sc-input{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:2px;padding:10px 14px;
+  font-family:'Share Tech Mono',monospace;font-size:12px;color:#fff;
+  outline:none;transition:border-color .2s;width:100%;
+  -webkit-appearance:none;color-scheme:dark;
+}
+.sc-input:focus{border-color:rgba(255,45,120,.5)}
+.sc-input.error{border-color:rgba(255,45,120,.8)}
+.sc-err{font-size:9px;color:#ff2d78;letter-spacing:.1em;margin-top:2px;display:none}
+.sc-err.show{display:block}
+.sc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.sc-row{grid-template-columns:1fr}}
+.sc-submit{
+  width:100%;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  padding:13px;border:1px solid #ff2d78;border-radius:1px;
+  background:#ff2d78;color:#fff;cursor:pointer;
+  font-family:'Share Tech Mono',monospace;transition:all .2s;margin-top:8px;
+}
+.sc-submit:hover:not(:disabled){background:#e0195f}
+.sc-submit:disabled{opacity:.5;cursor:not-allowed}
+.sc-loading{display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.15em;padding:12px}
+.sc-spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.15);border-top-color:#ff2d78;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sc-success{text-align:center;padding:24px 0}
+.sc-success-icon{font-size:32px;margin-bottom:12px}
+.sc-success-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--cyan);margin-bottom:8px}
+.sc-success-msg{font-size:12px;color:rgba(255,255,255,.5);line-height:1.7}
+.sc-error-msg{font-size:11px;color:#ff2d78;text-align:center;padding:8px;border:1px solid rgba(255,45,120,.2);border-radius:2px;margin-top:8px;display:none}
+.sc-error-msg.show{display:block}
 </style>
 </head>
 <body>
@@ -644,10 +807,9 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
 <!-- CUBE CHALLENGE OVERLAY — About Me gate -->
 <div id="cube-challenge">
   <div id="cc-title">Solve to See My Story</div>
-  <div id="cc-sub">20 seconds · hints every 5s · you've got this</div>
+  <div id="cc-sub">20 seconds · hint every 5s · drag to rotate</div>
 
   <div style="display:flex;align-items:center;gap:20px">
-    <!-- countdown ring -->
     <div id="cc-countdown-wrap">
       <svg width="72" height="72" viewBox="0 0 72 72">
         <circle id="cc-ring-bg" cx="36" cy="36" r="32"/>
@@ -673,45 +835,160 @@ body{font-family:'Share Tech Mono',monospace;color:#fff;cursor:none}
     </div>
   </div>
 
-  <!-- hint box -->
-  <div id="cc-hint-box">
-    <div id="cc-hint-label">Hint</div>
-    <div id="cc-hint-text">—</div>
+  <!-- progress bar -->
+  <div id="cc-progress-row">
+    <div id="cc-prog-label">Progress</div>
+    <div id="cc-prog-bar-wrap"><div id="cc-prog-bar"></div></div>
+    <div id="cc-prog-pct">0%</div>
   </div>
 
-  <!-- move buttons -->
+  <!-- upgraded hint card -->
+  <div id="cc-hint-box">
+    <div class="hint-top-bar"></div>
+    <div class="hint-inner">
+      <div class="hint-header">
+        <div class="hint-icon">◈</div>
+        <div class="hint-tag">Quick Help</div>
+        <div class="hint-step-badge" id="cc-hint-step">Step 1 of 4</div>
+      </div>
+      <div id="cc-hint-label">Getting Started</div>
+      <div id="cc-hint-text">Use the buttons below or your keyboard to rotate cube faces.</div>
+      <div class="hint-readable" id="cc-hint-readable">—</div>
+      <!-- beginner toggle -->
+      <div class="hint-toggle-row">
+        <div class="hint-toggle-label">Beginner Mode</div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="beginner-toggle" onchange="toggleBeginnerMode()">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+      <!-- legend (beginner mode) -->
+      <div class="hint-legend" id="hint-legend">
+        <div class="legend-row"><span class="legend-key">U</span><span class="legend-desc">Top clockwise</span></div>
+        <div class="legend-row"><span class="legend-key">U'</span><span class="legend-desc">Top anti-CW</span></div>
+        <div class="legend-row"><span class="legend-key">R</span><span class="legend-desc">Right clockwise</span></div>
+        <div class="legend-row"><span class="legend-key">R'</span><span class="legend-desc">Right anti-CW</span></div>
+        <div class="legend-row"><span class="legend-key">F</span><span class="legend-desc">Front clockwise</span></div>
+        <div class="legend-row"><span class="legend-key">F'</span><span class="legend-desc">Front anti-CW</span></div>
+        <div class="legend-row"><span class="legend-key">L</span><span class="legend-desc">Left clockwise</span></div>
+        <div class="legend-row"><span class="legend-key">D</span><span class="legend-desc">Bottom clockwise</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- move buttons with tooltips and face sub-labels -->
   <div id="cc-moves">
-    <div class="cc-mv" onclick="ccMove('U')">U</div>
-    <div class="cc-mv" onclick="ccMove('U\'')">U'</div>
-    <div class="cc-mv" onclick="ccMove('F')">F</div>
-    <div class="cc-mv" onclick="ccMove('F\'')">F'</div>
-    <div class="cc-mv" onclick="ccMove('R')">R</div>
-    <div class="cc-mv" onclick="ccMove('R\'')">R'</div>
-    <div class="cc-mv" onclick="ccMove('L')">L</div>
-    <div class="cc-mv" onclick="ccMove('L\'')">L'</div>
-    <div class="cc-mv" onclick="ccMove('D')">D</div>
-    <div class="cc-mv" onclick="ccMove('D\'')">D'</div>
-    <div class="cc-mv" onclick="ccMove('B')">B</div>
-    <div class="cc-mv" onclick="ccMove('B\'')">B'</div>
+    <div class="cc-mv" onclick="ccMove('U')"><div class="mv-tip">Top face clockwise</div>U<div class="mv-face">top</div></div>
+    <div class="cc-mv" onclick="ccMove('U\'')"><div class="mv-tip">Top face anti-clockwise</div>U'<div class="mv-face">top</div></div>
+    <div class="cc-mv" onclick="ccMove('F')"><div class="mv-tip">Front face clockwise</div>F<div class="mv-face">front</div></div>
+    <div class="cc-mv" onclick="ccMove('F\'')"><div class="mv-tip">Front face anti-clockwise</div>F'<div class="mv-face">front</div></div>
+    <div class="cc-mv" onclick="ccMove('R')"><div class="mv-tip">Right face clockwise</div>R<div class="mv-face">right</div></div>
+    <div class="cc-mv" onclick="ccMove('R\'')"><div class="mv-tip">Right face anti-clockwise</div>R'<div class="mv-face">right</div></div>
+    <div class="cc-mv" onclick="ccMove('L')"><div class="mv-tip">Left face clockwise</div>L<div class="mv-face">left</div></div>
+    <div class="cc-mv" onclick="ccMove('L\'')"><div class="mv-tip">Left face anti-clockwise</div>L'<div class="mv-face">left</div></div>
+    <div class="cc-mv" onclick="ccMove('D')"><div class="mv-tip">Bottom face clockwise</div>D<div class="mv-face">btm</div></div>
+    <div class="cc-mv" onclick="ccMove('D\'')"><div class="mv-tip">Bottom face anti-clockwise</div>D'<div class="mv-face">btm</div></div>
+    <div class="cc-mv" onclick="ccMove('B')"><div class="mv-tip">Back face clockwise</div>B<div class="mv-face">back</div></div>
+    <div class="cc-mv" onclick="ccMove('B\'')"><div class="mv-tip">Back face anti-clockwise</div>B'<div class="mv-face">back</div></div>
   </div>
 
   <div id="cc-actions">
-    <button class="cc-act cc-giveup" onclick="ccGiveUp()">Give Up / Auto-Solve</button>
+    <button class="cc-act cc-giveup" onclick="ccGiveUp()">Skip Challenge → See Solution</button>
     <button class="cc-act" onclick="closeCubeChallenge()">✕ Cancel</button>
   </div>
 </div>
 
-<!-- UNLOCK MESSAGE POPUP -->
+<!-- TIME'S UP MODAL -->
+<div id="cc-timeout-modal">
+  <div id="cc-timeout-card">
+    <div class="to-bar"></div>
+    <div class="to-icon">⏱</div>
+    <div class="to-title">Time's Up</div>
+    <div class="to-sub">But real-world problems don't come with timers.</div>
+    <div class="to-quote">"The best PMs don't just solve puzzles — they reframe them."</div>
+    <div class="to-btns">
+      <button class="to-btn retry" onclick="ccRetry()">↺ Try Again</button>
+      <button class="to-btn auto" onclick="ccAutoFromTimeout()">Auto-Solve & Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPGRADED UNLOCK POPUP -->
 <div id="unlock-popup">
   <div id="unlock-card">
     <div class="uc-bar"></div>
-    <div class="uc-icon">◈</div>
-    <div class="uc-title" id="uc-title">Portfolio Unlocked</div>
-    <div class="uc-msg">
-      You've seen how I approach problems.<br>
-      <span class="uc-highlight">Imagine what I could build with your team.</span>
+    <div class="uc-check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <button class="uc-btn" onclick="unlockAboutModal()">View About Me →</button>
+    <div class="uc-access-tag">Access Granted</div>
+    <div class="uc-title">Portfolio Unlocked</div>
+    <div class="uc-seen">You've seen how I approach problems.</div>
+    <div class="uc-highlight">Imagine what I could build with your team.</div>
+    <div class="uc-cta-line">Let's build something impactful together.</div>
+    <div class="uc-divider"></div>
+    <div class="uc-btns">
+      <button class="uc-btn-primary" onclick="unlockAboutModal()">View About Me →</button>
+      <button class="uc-btn-secondary" onclick="openScheduleModal()">Schedule 1:1</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE 1:1 MODAL -->
+<div id="schedule-modal">
+  <div id="schedule-card">
+    <div class="sc-card-close" onclick="closeScheduleModal()">✕</div>
+    <div id="schedule-form-view">
+      <div class="sc-tag">Opportunity · Connect</div>
+      <div class="sc-heading">Schedule a 1:1</div>
+      <div class="sc-sub2">I'll respond within 24 hours.</div>
+      <div class="sc-divider2"></div>
+      <div class="sc-row">
+        <div class="sc-field">
+          <label class="sc-label">Name *</label>
+          <input class="sc-input" id="sc-name" type="text" placeholder="Your name">
+          <div class="sc-err" id="sc-name-err">Name is required</div>
+        </div>
+        <div class="sc-field">
+          <label class="sc-label">Email *</label>
+          <input class="sc-input" id="sc-email" type="email" placeholder="you@company.com">
+          <div class="sc-err" id="sc-email-err">Valid email required</div>
+        </div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-field">
+          <label class="sc-label">Company *</label>
+          <input class="sc-input" id="sc-company" type="text" placeholder="Company name">
+          <div class="sc-err" id="sc-company-err">Company is required</div>
+        </div>
+        <div class="sc-field">
+          <label class="sc-label">Your Role *</label>
+          <input class="sc-input" id="sc-role" type="text" placeholder="e.g. Hiring Manager">
+          <div class="sc-err" id="sc-role-err">Role is required</div>
+        </div>
+      </div>
+      <div class="sc-field">
+        <label class="sc-label">Preferred Time Slot *</label>
+        <input class="sc-input" id="sc-time" type="datetime-local">
+        <div class="sc-err" id="sc-time-err">Please select a time</div>
+      </div>
+      <div class="sc-field">
+        <label class="sc-label">Message (optional)</label>
+        <textarea class="sc-input" id="sc-message" rows="3" placeholder="What would you like to discuss?"></textarea>
+      </div>
+      <div class="sc-error-msg" id="sc-global-err">Something went wrong. Please try emailing directly: harshmarc5@gmail.com</div>
+      <button class="sc-submit" id="sc-submit-btn" onclick="submitSchedule()">Send Request →</button>
+    </div>
+    <div id="schedule-loading-view" style="display:none">
+      <div class="sc-loading"><div class="sc-spinner"></div>Sending your request...</div>
+    </div>
+    <div id="schedule-success-view" style="display:none">
+      <div class="sc-success">
+        <div class="sc-success-icon">◎</div>
+        <div class="sc-success-title">Request Sent</div>
+        <div class="sc-success-msg">I'll get back to you within 24 hours.<br>Looking forward to connecting.</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1511,8 +1788,7 @@ document.addEventListener('touchmove',e=>{
 initCube();
 
 /* ═══════════════════════════════════════════════════════
-   CUBE CHALLENGE — About Me gate
-   20s countdown · hint every 5s · give up = unlock with message
+   CUBE CHALLENGE ENGINE — upgraded
    ═══════════════════════════════════════════════════════ */
 
 let ccCube=[];
@@ -1525,13 +1801,63 @@ let ccDragging=false;
 let ccLastX=0,ccLastY=0;
 let ccRotX=-30,ccRotY=30;
 let ccScrambleLog=[];
+let beginnerMode=false;
+
+// subtle click sound via Web Audio
+let audioCtx=null;
+function playClick(){
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.connect(g);g.connect(audioCtx.destination);
+    o.frequency.setValueAtTime(800,audioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(400,audioCtx.currentTime+.05);
+    g.gain.setValueAtTime(.06,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.08);
+    o.start();o.stop(audioCtx.currentTime+.08);
+  }catch(e){}
+}
 
 const CC_HINTS=[
-  {label:'Try This First',text:"R U R' U' — repeat 6× to cycle corners without scrambling the cube."},
-  {label:'Sune Algorithm',text:"R U R' U R U2 R' — orients top corners. Use when top face is nearly one colour."},
-  {label:'Anti-Sune',text:"R U2 R' U' R U' R' — mirrors Sune. Pair with it to fix remaining corners."},
-  {label:'Quick Swap',text:"U R U' L' U R' U' L — swaps diagonal corners when you're nearly there."},
+  {
+    label:'The Starter Move',step:'Step 1 of 4',
+    text:'The Sexy Move — most common 4-step combo in cubing.',
+    readable:'Right → Top → Undo Right → Undo Top',algo:'R U R\' U\''
+  },
+  {
+    label:'Sune Algorithm',step:'Step 2 of 4',
+    text:'Cycles and orients corners on the top layer.',
+    readable:'Right → Top → Undo R → Top → Right → Top×2 → Undo Right',algo:'R U R\' U R U2 R\''
+  },
+  {
+    label:'Anti-Sune',step:'Step 3 of 4',
+    text:'Mirror of Sune. Pair them to fix all top corners.',
+    readable:'Right → Top×2 → Undo R → Undo Top → Right → Undo Top → Undo Right',algo:'R U2 R\' U\' R U\' R\''
+  },
+  {
+    label:'Final Swap',step:'Step 4 of 4',
+    text:'Swaps two diagonal corners when nearly solved.',
+    readable:'Top → Right → Undo Top → Left\' → Top → Undo Right → Undo Top → Left',algo:'U R U\' L\' U R\' U\' L'
+  },
 ];
+
+function ccSolvedPercent(){
+  let matched=0,total=0;
+  ccCube.forEach(face=>{face.forEach(c=>{if(c===face[0])matched++;total++;});});
+  return Math.round((matched/total)*100);
+}
+
+function ccUpdateProgress(){
+  const pct=ccSolvedPercent();
+  document.getElementById('cc-prog-bar').style.width=pct+'%';
+  document.getElementById('cc-prog-pct').textContent=pct+'%';
+}
+
+function toggleBeginnerMode(){
+  beginnerMode=document.getElementById('beginner-toggle').checked;
+  const legend=document.getElementById('hint-legend');
+  if(legend){beginnerMode?legend.classList.add('show'):legend.classList.remove('show');}
+}
 
 function ccInitCube(){
   ccCube=[
@@ -1554,6 +1880,7 @@ function ccRenderCube(){
       el.appendChild(d);
     });
   });
+  ccUpdateProgress();
 }
 
 function ccIsSolved(){
@@ -1561,12 +1888,14 @@ function ccIsSolved(){
 }
 
 function ccMove(mv){
+  if(ccSecondsLeft<=0)return;
   if(!MOVES[mv])return;
+  playClick();
   MOVES[mv](ccCube);
   ccMoveCount++;
   document.getElementById('cc-moves-count').textContent=ccMoveCount;
   ccRenderCube();
-  if(ccIsSolved()) ccWin();
+  if(ccIsSolved())ccWin();
 }
 
 function ccScramble(){
@@ -1575,7 +1904,7 @@ function ccScramble(){
   let last='';
   for(let i=0;i<15;i++){
     let mv;
-    do{ mv=ALL_MOVES[Math.floor(Math.random()*ALL_MOVES.length)]; }
+    do{mv=ALL_MOVES[Math.floor(Math.random()*ALL_MOVES.length)];}
     while(mv[0]===last[0]);
     MOVES[mv](ccCube);
     ccScrambleLog.push(mv);
@@ -1585,20 +1914,39 @@ function ccScramble(){
 }
 
 function startCubeChallenge(){
-  ccMoveCount=0;
-  ccSecondsLeft=20;
-  ccHintStep=0;
-  document.getElementById('cc-moves-count').textContent='0';
-  document.getElementById('cc-hint-box').classList.remove('show');
-  document.getElementById('cc-ring-text').textContent='20';
-  document.getElementById('cc-ring-fg').style.stroke='#00f5d4';
-  document.getElementById('cc-ring-fg').style.strokeDashoffset='0';
-  ccRotX=-30;ccRotY=30;
-  document.getElementById('cc-cube-wrap').style.transform='rotateX('+ccRotX+'deg) rotateY('+ccRotY+'deg)';
-  ccScramble();
-  document.getElementById('cube-challenge').classList.add('show');
+  // clean up any existing intervals — no memory leaks
   clearInterval(ccCountdownInterval);
   clearInterval(ccHintInterval);
+  ccCountdownInterval=null;ccHintInterval=null;
+
+  ccMoveCount=0;ccSecondsLeft=20;ccHintStep=0;
+  document.getElementById('cc-moves-count').textContent='0';
+  document.getElementById('cc-hint-box').classList.remove('show');
+  document.getElementById('cc-hint-step').textContent='Step 1 of 4';
+  document.getElementById('cc-ring-text').textContent='20';
+  const fg=document.getElementById('cc-ring-fg');
+  fg.style.transition='none';
+  fg.style.strokeDashoffset='0';
+  fg.style.stroke='#00f5d4';
+  document.getElementById('cc-prog-bar').style.width='0%';
+  document.getElementById('cc-prog-pct').textContent='0%';
+  document.querySelectorAll('.cc-mv').forEach(b=>b.style.opacity='');
+  // reset beginner toggle
+  const tog=document.getElementById('beginner-toggle');
+  if(tog)tog.checked=false;
+  beginnerMode=false;
+  const legend=document.getElementById('hint-legend');
+  if(legend)legend.classList.remove('show');
+
+  ccRotX=-30;ccRotY=30;
+  document.getElementById('cc-cube-wrap').style.transform='rotateX(-30deg) rotateY(30deg)';
+  ccScramble();
+  document.getElementById('cc-timeout-modal').classList.remove('show');
+  document.getElementById('cube-challenge').classList.add('show');
+
+  // re-enable ring transition after dashoffset reset
+  setTimeout(()=>{fg.style.transition='stroke-dashoffset .9s linear,stroke .4s';},60);
+
   ccCountdownInterval=setInterval(ccTick,1000);
   ccHintInterval=setInterval(ccShowNextHint,5000);
 }
@@ -1607,13 +1955,19 @@ function ccTick(){
   ccSecondsLeft--;
   const el=document.getElementById('cc-ring-text');
   const fg=document.getElementById('cc-ring-fg');
-  if(el)el.textContent=ccSecondsLeft;
-  const pct=(20-ccSecondsLeft)/20;
+  const safe=Math.max(0,ccSecondsLeft);
+  if(el)el.textContent=safe;
+  const pct=(20-safe)/20;
   if(fg)fg.style.strokeDashoffset=''+(201*pct);
   if(ccSecondsLeft>10){fg.style.stroke='#00f5d4';}
   else if(ccSecondsLeft>5){fg.style.stroke='#fbbf24';}
   else{fg.style.stroke='#ff2d78';}
-  if(ccSecondsLeft<=0) ccTimeUp();
+  if(ccSecondsLeft<=0){
+    clearInterval(ccCountdownInterval);clearInterval(ccHintInterval);
+    ccCountdownInterval=null;ccHintInterval=null;
+    document.querySelectorAll('.cc-mv').forEach(b=>b.style.opacity='0.3');
+    setTimeout(()=>document.getElementById('cc-timeout-modal').classList.add('show'),500);
+  }
 }
 
 function ccShowNextHint(){
@@ -1621,19 +1975,27 @@ function ccShowNextHint(){
   const h=CC_HINTS[ccHintStep];
   ccHintStep++;
   document.getElementById('cc-hint-label').textContent=h.label;
+  document.getElementById('cc-hint-step').textContent=h.step;
   document.getElementById('cc-hint-text').textContent=h.text;
+  document.getElementById('cc-hint-readable').textContent=h.readable;
   document.getElementById('cc-hint-box').classList.add('show');
 }
 
-function ccTimeUp(){
-  clearInterval(ccCountdownInterval);
-  clearInterval(ccHintInterval);
+function ccRetry(){
+  document.getElementById('cc-timeout-modal').classList.remove('show');
+  document.querySelectorAll('.cc-mv').forEach(b=>b.style.opacity='');
+  startCubeChallenge();
+}
+
+function ccAutoFromTimeout(){
+  document.getElementById('cc-timeout-modal').classList.remove('show');
+  document.querySelectorAll('.cc-mv').forEach(b=>b.style.opacity='');
   ccAutoSolveAndUnlock();
 }
 
 function ccGiveUp(){
-  clearInterval(ccCountdownInterval);
-  clearInterval(ccHintInterval);
+  clearInterval(ccCountdownInterval);clearInterval(ccHintInterval);
+  ccCountdownInterval=null;ccHintInterval=null;
   ccAutoSolveAndUnlock();
 }
 
@@ -1641,22 +2003,16 @@ function ccAutoSolveAndUnlock(){
   const solution=[...ccScrambleLog].reverse().map(m=>INV[m]);
   let i=0;
   function step(){
-    if(i>=solution.length){
-      ccRenderCube();
-      setTimeout(()=>showUnlockPopup(),400);
-      return;
-    }
-    MOVES[solution[i]](ccCube);
-    ccRenderCube();
-    i++;
-    setTimeout(step,80);
+    if(i>=solution.length){ccRenderCube();setTimeout(()=>showUnlockPopup(),300);return;}
+    MOVES[solution[i]](ccCube);ccRenderCube();i++;
+    setTimeout(step,70);
   }
   step();
 }
 
 function ccWin(){
-  clearInterval(ccCountdownInterval);
-  clearInterval(ccHintInterval);
+  clearInterval(ccCountdownInterval);clearInterval(ccHintInterval);
+  ccCountdownInterval=null;ccHintInterval=null;
   setTimeout(()=>{
     closeCubeChallenge();
     document.getElementById('modal-content').innerHTML=MODALS['about']||'';
@@ -1667,6 +2023,7 @@ function ccWin(){
 
 function showUnlockPopup(){
   document.getElementById('cube-challenge').classList.remove('show');
+  document.getElementById('cc-timeout-modal').classList.remove('show');
   document.getElementById('unlock-popup').classList.add('show');
 }
 
@@ -1678,10 +2035,91 @@ function unlockAboutModal(){
 }
 
 function closeCubeChallenge(){
-  clearInterval(ccCountdownInterval);
-  clearInterval(ccHintInterval);
+  clearInterval(ccCountdownInterval);clearInterval(ccHintInterval);
+  ccCountdownInterval=null;ccHintInterval=null;
   document.getElementById('cube-challenge').classList.remove('show');
+  document.getElementById('cc-timeout-modal').classList.remove('show');
+  document.querySelectorAll('.cc-mv').forEach(b=>b.style.opacity='');
 }
+
+/* ── SCHEDULE 1:1 ─────────────────────── */
+function openScheduleModal(){
+  document.getElementById('unlock-popup').classList.remove('show');
+  document.getElementById('schedule-form-view').style.display='';
+  document.getElementById('schedule-loading-view').style.display='none';
+  document.getElementById('schedule-success-view').style.display='none';
+  document.getElementById('sc-global-err').classList.remove('show');
+  ['sc-name','sc-email','sc-company','sc-role','sc-message','sc-time'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('error');}
+  });
+  ['sc-name-err','sc-email-err','sc-company-err','sc-role-err','sc-time-err'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('show');
+  });
+  document.getElementById('schedule-modal').classList.add('show');
+}
+
+function closeScheduleModal(){
+  document.getElementById('schedule-modal').classList.remove('show');
+}
+
+function validateScheduleForm(){
+  let valid=true;
+  function check(id,errId,cond){
+    const el=document.getElementById(id),err=document.getElementById(errId);
+    if(!cond(el.value)){el.classList.add('error');err.classList.add('show');valid=false;}
+    else{el.classList.remove('error');err.classList.remove('show');}
+  }
+  check('sc-name','sc-name-err',v=>v.trim().length>1);
+  check('sc-email','sc-email-err',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
+  check('sc-company','sc-company-err',v=>v.trim().length>0);
+  check('sc-role','sc-role-err',v=>v.trim().length>0);
+  check('sc-time','sc-time-err',v=>v.length>0);
+  return valid;
+}
+
+function submitSchedule(){
+  if(!validateScheduleForm())return;
+  const name=document.getElementById('sc-name').value.trim();
+  const email=document.getElementById('sc-email').value.trim();
+  const company=document.getElementById('sc-company').value.trim();
+  const role=document.getElementById('sc-role').value.trim();
+  const time=document.getElementById('sc-time').value;
+  const message=document.getElementById('sc-message').value.trim();
+
+  document.getElementById('schedule-form-view').style.display='none';
+  document.getElementById('schedule-loading-view').style.display='';
+
+  // EmailJS integration — replace keys for production
+  // Falls back to mailto automatically
+  const EMAILJS_SERVICE='your_service_id';
+  const EMAILJS_TEMPLATE='your_template_id';
+  const EMAILJS_KEY='your_public_key';
+  const tpl={from_name:name,from_email:email,company,role,preferred_time:time,message:message||'—',to_email:'harshmarc5@gmail.com'};
+
+  if(typeof emailjs!=='undefined'&&EMAILJS_KEY!=='your_public_key'){
+    emailjs.init(EMAILJS_KEY);
+    emailjs.send(EMAILJS_SERVICE,EMAILJS_TEMPLATE,tpl)
+      .then(()=>showScheduleSuccess())
+      .catch(()=>openMailto(name,email,company,role,time,message));
+  } else {
+    setTimeout(()=>{showScheduleSuccess();openMailto(name,email,company,role,time,message);},500);
+  }
+}
+
+function openMailto(name,email,company,role,time,message){
+  const body=`Name: ${name}\nEmail: ${email}\nCompany: ${company}\nRole: ${role}\nPreferred Time: ${time}\nMessage: ${message||'—'}`;
+  window.open('mailto:harshmarc5@gmail.com?subject=Interview Request from Portfolio&body='+encodeURIComponent(body),'_blank');
+}
+
+function showScheduleSuccess(){
+  document.getElementById('schedule-loading-view').style.display='none';
+  document.getElementById('schedule-success-view').style.display='';
+}
+
+// schedule modal bg click to close
+document.getElementById('schedule-modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('schedule-modal'))closeScheduleModal();
+});
 
 // drag-rotate for challenge cube
 const ccScene=document.getElementById('cc-cube-scene');
@@ -1710,11 +2148,14 @@ document.addEventListener('touchmove',e=>{
 // keyboard for challenge cube
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('cube-challenge').classList.contains('show'))return;
+  if(document.getElementById('cc-timeout-modal').classList.contains('show'))return;
   const k=e.key.toUpperCase();
   const map={'U':'U','F':'F','R':'R','L':'L','D':'D','B':'B'};
   if(map[k]){e.preventDefault();ccMove(e.shiftKey?map[k]+"'":map[k]);}
 });
 
 </script>
+<!-- EmailJS optional — mailto fallback works without it -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 </body>
 </html>
